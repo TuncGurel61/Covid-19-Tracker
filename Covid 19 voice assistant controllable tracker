@@ -1,0 +1,1370 @@
+from __future__ import print_function
+import datetime
+import pickle
+import os.path
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import os
+import time
+import playsound
+import speech_recognition as sr
+from gtts import gTTS
+from bs4 import BeautifulSoup
+import requests
+from tkinter import *
+import tkinter.messagebox
+import random
+
+BCres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=/m/015jr&gl=CA&ceid=CA:en')
+CAres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F0d060g&gl=CA&ceid=CA%3Aen')
+QBres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F0694j&gl=CA&ceid=CA%3Aen')
+ONres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F05kr_&gl=CA&ceid=CA%3Aen')
+ALres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F0j95&gl=CA&ceid=CA%3Aen')
+SAres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F06nrt&gl=CA&ceid=CA%3Aen')
+MAres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F04s7y&gl=CA&ceid=CA%3Aen')
+YUres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F087r4&gl=CA&ceid=CA%3Aen')
+NLres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F05j49&gl=CA&ceid=CA%3Aen')
+NSres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F059t8&gl=CA&ceid=CA%3Aen')
+NBres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F059s8&gl=CA&ceid=CA%3Aen')
+PEIres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F05rh2&gl=CA&ceid=CA%3Aen')
+NUres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F0h5qxv&gl=CA&ceid=CA%3Aen')
+NWTres = requests.get('https://news.google.com/covid19/map?hl=en-CA&mid=%2Fm%2F059ts&gl=CA&ceid=CA%3Aen')
+
+soup = BeautifulSoup(BCres.text, 'lxml')
+soup2 = BeautifulSoup(CAres.text, 'lxml')
+soup3 = BeautifulSoup(QBres.text, 'lxml')
+soup4 = BeautifulSoup(ONres.text, 'lxml')
+soup5 = BeautifulSoup(ALres.text, 'lxml')
+soup6 = BeautifulSoup(SAres.text, 'lxml')
+soup7 = BeautifulSoup(MAres.text, 'lxml')
+soup8 = BeautifulSoup(YUres.text, 'lxml')
+soup9 = BeautifulSoup(NLres.text, 'lxml')
+soup10 = BeautifulSoup(NSres.text, 'lxml')
+soup11 = BeautifulSoup(NBres.text, 'lxml')
+soup12 = BeautifulSoup(PEIres.text, 'lxml')
+soup13 = BeautifulSoup(NUres.text, 'lxml')
+soup14 = BeautifulSoup(NWTres.text, 'lxml')
+
+#Scraping the Sites
+#BC
+confirmed_bc = soup.select('.UvMayb')[0]
+recovered_bc = soup.select('.UvMayb')[1]
+death_bc = soup.select('.UvMayb')[2]
+
+#Canada
+confirmed_ca = soup2.select('.UvMayb')[0]
+recovered_ca = soup2.select('.UvMayb')[1]
+death_ca = soup2.select('.UvMayb')[2]
+
+#Quebec
+confirmed_quebec = soup3.select('.UvMayb')[0]
+recovered_quebec = soup3.select('.UvMayb')[1]
+death_quebec = soup3.select('.UvMayb')[2]
+
+#Ontario
+confirmed_ontario = soup4.select('.UvMayb')[0]
+recovered_ontario = soup4.select('.UvMayb')[1]
+death_ontario = soup4.select('.UvMayb')[2]
+
+#Alberta
+confirmed_alberta = soup5.select('.UvMayb')[0]
+recovered_alberta = soup5.select('.UvMayb')[1]
+death_alberta = soup5.select('.UvMayb')[2]
+
+#Saskatchwan
+confirmed_sas = soup6.select('.UvMayb')[0]
+recovered_sas = soup6.select('.UvMayb')[1]
+death_sas = soup6.select('.UvMayb')[2]
+
+#Manitoba
+confirmed_manitoba = soup7.select('.UvMayb')[0]
+recovered_manitoba = soup7.select('.UvMayb')[1]
+death_manitoba = soup7.select('.UvMayb')[2]
+
+#Yukon
+confirmed_yukon = soup8.select('.UvMayb')[0]
+recovered_yukon = soup8.select('.UvMayb')[1]
+death_yukon = soup8.select('.UvMayb')[2]
+
+#NewFoundland and Labrador
+confirmed_nl = soup9.select('.UvMayb')[0]
+recovered_nl = soup9.select('.UvMayb')[1]
+death_nl = soup9.select('.UvMayb')[2]
+
+#Nova Scotia
+confirmed_ns = soup10.select('.UvMayb')[0]
+recovered_ns = soup10.select('.UvMayb')[1]
+death_ns = soup10.select('.UvMayb')[2]
+
+#New Brunswick
+confirmed_nb = soup11.select('.UvMayb')[0]
+recovered_nb = soup11.select('.UvMayb')[1]
+death_nb = soup11.select('.UvMayb')[2]
+
+#Prince Edward Island
+confirmed_pei = soup12.select('.UvMayb')[0]
+recovered_pei = soup12.select('.UvMayb')[1]
+death_pei = soup12.select('.UvMayb')[2]
+
+#Nunavut
+confirmed_nu = soup13.select('.UvMayb')[0]
+recovered_nu = soup13.select('.UvMayb')[1]
+death_nu = soup13.select('.UvMayb')[2]
+
+#NorthWest Territories
+confirmed_nwt = soup14.select('.UvMayb')[0]
+recovered_nwt = soup14.select('.UvMayb')[1]
+death_nwt = soup14.select('.UvMayb')[2]
+
+
+#Confirmed Cases BC
+con1 = confirmed_bc.string
+#Recovered Patients BC
+rec1 = recovered_bc.string
+#Deaths BC
+dea1 = death_bc.string
+
+
+#Confirmed Cases Canada
+con2 = confirmed_ca.string
+#Recovered Patients Canada
+rec2 = recovered_ca.string
+#Deaths Canada
+dea2 = death_ca.string
+
+
+#Confirmed Cases Quebec
+con3 = confirmed_quebec.string
+#Recovered Patients Quebec
+rec3 = recovered_quebec.string
+#Deaths Quebec
+dea3 = death_quebec.string
+
+
+#Confirmed Cases Ontario
+con4 = confirmed_ontario.string
+#Recovered Patients BC
+rec4 = recovered_ontario.string
+#Deaths BC
+dea4 = death_ontario.string
+
+
+#Confirmed Cases Alberta
+con5 = confirmed_alberta.string
+#Recovered Patients BC
+rec5 = recovered_alberta.string
+#Deaths BC
+dea5 = death_alberta.string
+
+
+#Confirmed Cases Saskatchwan
+con6 = confirmed_sas.string
+#Recovered Patients BC
+rec6 = recovered_sas.string
+#Deaths BC
+dea6 = death_sas.string
+
+
+#Confirmed Cases Manitoba
+con7 = confirmed_manitoba.string
+#Recovered Patients BC
+rec7 = recovered_manitoba.string
+#Deaths BC
+dea7 = death_manitoba.string
+
+
+#Confirmed Cases Yukon
+con8 = confirmed_yukon.string
+#Recovered Patients BC
+rec8 = recovered_yukon.string
+#Deaths BC
+dea8 = death_yukon.string
+
+
+#Confirmed Cases NewFoundland and Labrador
+con9 = confirmed_nl.string
+#Recovered Patients BC
+rec9 = recovered_nl.string
+#Deaths BC
+dea9 = death_nl.string
+
+
+#Confirmed Cases Nova Scotia
+con10 = confirmed_ns.string
+#Recovered Patients BC
+rec10 = recovered_ns.string
+#Deaths BC
+dea10 = death_ns.string
+
+
+#Confirmed Cases New Brunswick
+con11 = confirmed_nb.string
+#Recovered Patients BC
+rec11 = recovered_nb.string
+#Deaths BC
+dea11 = death_nb.string
+
+
+#Confirmed Cases Prince Edward Island
+con12 = confirmed_pei.string
+#Recovered Patients BC
+rec12 = recovered_pei.string
+#Deaths BC
+dea12 = death_pei.string
+
+
+#Confirmed Cases Nunavut
+con13 = confirmed_nu.string
+#Recovered Patients BC
+rec13 = recovered_nu.string
+#Deaths BC
+dea13 = death_nu.string
+
+
+#Confirmed Cases NorthWest Territories
+con14 = confirmed_nwt.string
+#Recovered Patients BC
+rec14 = recovered_nwt.string
+#Deaths BC
+dea14 = death_nwt.string
+
+
+
+
+
+#########################################
+
+#Window
+wn = Tk()
+wn.title("Corona Virus Data")
+wn.geometry("400x250")
+
+h1 = Label(wn, width=50, text="WELCOME TO COVID-19 CASE ANALYZER", font=("Calibri", 15, "bold"))
+h1.pack(pady=60)
+
+label_bc = Label(wn, text= f'''
+    COVID 19 Cases in
+    British Columbia
+
+    Confirmed Number: {con1}
+    Recovered Number: {rec1}
+    Death Number: {dea1}
+    ''', font=("Calibri", 13, "bold"))
+
+label_canada = Label(wn, text= f'''
+    COVID 19 Cases in
+    Canada
+
+    Confirmed Number: {con2}
+    Recovered Number: {rec2}
+    Death Number: {dea2}
+    ''', font=("Calibri", 15, "bold"))
+
+label_qu = Label(wn, text= f'''
+    COVID 19 Cases in
+    Quebec
+
+    Confirmed Number: {con3}
+    Recovered Number: {rec3}
+    Death Number: {dea3}
+    ''', font=("Calibri", 13, "bold"))
+
+label_on = Label(wn, text= f'''
+    COVID 19 Cases in
+    Ontario
+
+    Confirmed Number: {con4}
+    Recovered Number: {rec4}
+    Death Number: {dea4}
+    ''', font=("Calibri", 13, "bold"))
+
+label_al = Label(wn, text= f'''
+    COVID 19 Cases in Alberta
+
+    Confirmed Number: {con5}
+    Recovered Number: {rec5}
+    Death Number: {dea5}
+    ''', font=("Calibri", 13, "bold"))
+
+label_sas = Label(wn, text= f'''
+    COVID 19 Cases in
+    Saskatchwan
+
+    Confirmed Number: {con6}
+    Recovered Number: {rec6}
+    Death Number: {dea6}
+    ''', font=("Calibri", 13, "bold"))
+
+label_ma = Label(wn, text= f'''
+    COVID 19 Cases in
+    Manitoba
+
+    Confirmed Number: {con7}
+    Recovered Number: {rec7}
+    Death Number: {dea7}
+    ''', font=("Calibri", 13, "bold"))
+
+label_yu = Label(wn, text= f'''
+    COVID 19 Cases in
+    Yukon
+
+    Confirmed Number: {con8}
+    Recovered Number: {rec8}
+    Death Number: {dea8}
+    ''', font=("Calibri", 13, "bold"))
+
+label_nl = Label(wn, text= f'''
+    COVID 19 Cases in
+    Newfoundland and Labrador
+
+    Confirmed Number: {con9}
+    Recovered Number: {rec9}
+    Death Number: {dea9}
+    ''', font=("Calibri", 13, "bold"))
+
+label_ns = Label(wn, text= f'''
+    COVID 19 Cases in
+    Nova Scotia
+
+    Confirmed Number: {con10}
+    Recovered Number: {rec10}
+    Death Number: {dea10}
+    ''', font=("Calibri", 13, "bold"))
+
+label_nb = Label(wn, text= f'''
+    COVID 19 Cases in
+    New Brunswick
+
+    Confirmed Number: {con11}
+    Recovered Number: {rec11}
+    Death Number: {dea11}
+    ''', font=("Calibri", 13, "bold"))
+
+label_pei = Label(wn, text= f'''
+    COVID 19 Cases in
+    Prince Edward Island
+
+    Confirmed Number: {con12}
+    Recovered Number: {rec12}
+    Death Number: {dea12}
+    ''', font=("Calibri", 13, "bold"))
+
+label_nu = Label(wn, text= f'''
+    COVID 19 Cases in Nunavut
+
+    Confirmed Number: {con13}
+    Recovered Number: {rec13}
+    Death Number: {dea13}
+    ''', font=("Calibri", 13, "bold"))
+
+label_nwt = Label(wn, text= f'''
+    COVID 19 Cases in
+    NorthWestTerritories
+
+    Confirmed Number: {con14}
+    Recovered Number: {rec14}
+    Death Number: {dea14}
+    ''', font=("Calibri", 13, "bold"))
+
+BC = "British Columbia"
+QU = "Quebec"
+ON = "Ontario"
+AL = "Alberta"
+NS = "Nova Scotia"
+SAS = "Saskatchewan"
+MA = "Manitoba"
+NL = "Newfoundland and Labrador"
+NB = "New Brunswick"
+PEI = "Prince Edward Island"
+YU = "Yukon"
+NWT = "Northwest Territories"
+NU = "Nunavut"
+
+search_line_text = Label(wn, text="Type in the Province", font=("Calibri", 12, "bold"))
+
+
+def hey(event):
+    print("You did something")
+
+options = [
+	"Select Provinces",
+    "British Columbia",
+    "Quebec",
+    "Ontario",
+    "Alberta",
+    "Nova Scotia",
+    "Saskatchewan",
+    "Manitoba",
+    "Newfoundland and Labrador",
+    "New Brunswick",
+    "Prince Edward Island",
+    "Yukon",
+    "Northwest Territories",
+    "Nunavut"
+]
+
+
+def speak(text):
+    tts = gTTS(text=text, lang="en")
+    filename = "voice.mp3"
+    tts.save(filename)
+    playsound.playsound(filename)
+    os.remove(filename)
+
+def get_audio():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+        said = ""
+
+        try:
+            said = r.recognize_google(audio)
+            print(said)
+        except Exception as e:
+            print("Exception: " + str(e))
+
+    return said
+
+
+def show_canada():
+    h1.pack_forget()
+    canada.pack_forget()
+    province.pack_forget()
+    print("Canada Cases")
+    print(f"Confirmed Number: {con2}")
+    print(f"Recovered Number: {rec2}")
+    print(f"Death Number: {dea2}")
+    print(" ")
+    label_canada.pack()
+    return_to_home.pack(pady=10)
+    
+def show_provinces():
+    text = get_audio()
+    if "get me in" in text:
+        wn.geometry("530x480")
+        h1.pack_forget()
+        canada.pack_forget()
+        province.pack_forget()
+        search_line_text.pack(pady=10, padx=10)
+        voice.pack(anchor=NE)
+        wn.bind("<Return>", searching)
+        e.pack(pady=10, padx=15)
+        search.pack(pady=10)
+        return_to_home.pack()
+        drop.pack(pady=10, padx=20, anchor=NW)
+    else:
+        error_box = tkinter.messagebox.showerror("Warning", "Please provide the correct password!").pack()
+    
+
+def return_to_home_page():
+    e.delete(0, "end")
+    wn.geometry("400x250")
+    label_canada.pack_forget()
+    e.pack_forget()
+    sorry_message.pack_forget()
+    search_line_text.pack_forget()
+    search.pack_forget()
+    label_bc.pack_forget()
+    label_canada.pack_forget()
+    label_qu.pack_forget()
+    label_on.pack_forget()
+    label_al.pack_forget()
+    label_sas.pack_forget()
+    label_ma.pack_forget()
+    label_yu.pack_forget()
+    label_nl.pack_forget()
+    label_ns.pack_forget()
+    label_nb.pack_forget()
+    label_pei.pack_forget()
+    label_nu.pack_forget()
+    label_nwt.pack_forget()
+    return_to_home.pack_forget()
+    drop.pack_forget()
+    voice.pack_forget()
+    h1.pack(padx=10, pady=60)
+    canada.pack()
+    province.pack(pady=10)
+
+def searching(events=None):
+    if e.get() == "Canada" or e.get() == "canada" or e.get() == "ca" or e.get() == "CA":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_bc.pack_forget()
+        label_canada.pack()
+        return_to_home.pack()
+    
+    elif e.get() == "" or e.get() == " " or e.get() == "   ":
+        e.delete(0, 'end')
+        label_canada.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        error_box = tkinter.messagebox.showerror("Warning", "Please Enter a Province")
+        return_to_home.pack()
+
+    elif e.get() == "British Columbia" or e.get() == BC.lower() or e.get() == "BC" or e.get() == "bc":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        label_canada.pack_forget()
+        sorry_message.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_bc.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Quebec" or e.get() == QU.lower() or e.get() == "QC" or e.get() == "qc":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_qu.pack()
+        return_to_home.pack()
+   
+    elif e.get() == "Ontario" or e.get() == ON.lower() or e.get() == "ON" or e.get() == "on":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_on.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Alberta" or e.get() == AL.lower() or e.get() == "AB" or e.get() == "ab":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_al.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Saskatchewan" or e.get() == SAS.lower() or e.get() == "SAS" or e.get() == "sas":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_canada.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_sas.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Manitoba" or e.get() == MA.lower() or e.get() == "MB" or e.get() == "mb":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_canada.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_ma.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Yukon" or e.get() == YU.lower() or e.get() == "YT" or e.get() == "yt" or e.get() == "yk" or e.get() == "YK":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_yu.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Newfoundland and Labrador" or e.get() == NL.lower() or e.get() == "NL" or e.get() == "nl":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_canada.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_nl.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Nova Scotia" or e.get() == NS.lower() or e.get() == "NS" or e.get() == "ns":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_ns.pack()
+        return_to_home.pack()
+
+    elif e.get() == "New Brunswick" or e.get() == NB.lower() or e.get() == "NB" or e.get() == "nb":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_canada.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_nb.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Prince Edward Island" or e.get() == PEI.lower() or e.get() == "PE" or e.get() == "pe":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_canada.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_pei.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Nunavut" or e.get() == NU.lower() or e.get() == "NU" or e.get() == "nu":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_canada.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nwt.pack_forget()
+        label_nu.pack()
+        return_to_home.pack()
+
+    elif e.get() == "Northwest Territories" or e.get() == NWT.lower() or e.get() == "NT" or e.get() == "nt":
+        e.delete(0, 'end')
+        return_to_home.pack_forget()
+        sorry_message.pack_forget()
+        label_bc.pack_forget()
+        label_canada.pack_forget()
+        label_qu.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack()
+        return_to_home.pack()
+
+    else:
+        message = e.get()
+        e.delete(0, 'end')
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        error_box = tkinter.messagebox.showerror("Warning", "Sorry there is no location called {}".format(message))
+        return_to_home.pack()
+
+def option_com(event):
+    if clicked.get() == options[1]:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_bc.pack()
+        return_to_home.pack()
+
+    elif clicked.get() == options[2]:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_qu.pack()
+        return_to_home.pack()
+
+    elif clicked.get() == options[3]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_canada.pack_forget()
+            label_on.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_on.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[4]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_on.pack_forget()
+            label_canada.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_al.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[5]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_on.pack_forget()
+            label_canada.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_ns.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[6]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_canada.pack_forget()
+            label_on.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_sas.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[7]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_on.pack_forget()
+            label_canada.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_ma.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[8]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_canada.pack_forget()
+            label_on.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_nl.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[9]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_canada.pack_forget()
+            label_on.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_nb.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[10]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_on.pack_forget()
+            label_canada.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_pei.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[11]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_on.pack_forget()
+            label_al.pack_forget()
+            label_canada.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_yu.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[12]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_on.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_canada.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_nwt.pack()
+            return_to_home.pack()
+
+    elif clicked.get() == options[13]:
+            return_to_home.pack_forget()
+            label_bc.pack_forget()
+            label_qu.pack_forget()
+            label_on.pack_forget()
+            label_canada.pack_forget()
+            label_al.pack_forget()
+            label_sas.pack_forget()
+            label_ma.pack_forget()
+            label_yu.pack_forget()
+            label_nl.pack_forget()
+            label_ns.pack_forget()
+            label_nb.pack_forget()
+            label_pei.pack_forget()
+            label_nu.pack_forget()
+            label_nwt.pack_forget()
+            label_nu.pack()
+            return_to_home.pack()
+
+hatr = "Here are the recent results that I found in google."
+
+def record():
+    text = get_audio()
+    if "British Columbia" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_bc.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In British Columbia, there are {con1} confirmed cases, {rec1} recovered cases and {dea1} people lost their life")
+
+
+    elif "Canada" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_canada.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Canada, there are {con2} confirmed cases, {rec2} recovered cases and {dea2} people lost their life")
+
+
+    elif "Quebec" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_qu.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Quebec there are {con3} confirmed cases, {rec3} recovered cases and {dea3} people lost their life")
+
+
+    elif "Ontario" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_on.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Ontario, there are {con4} confirmed cases, {rec4} recovered cases and {dea4} people lost their life")
+
+    elif "Alberta" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_al.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Alberta, there are {con5} confirmed cases, {rec5} recovered cases and {dea5} people lost their life")
+
+    elif "Saskatchewan" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_sas.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Saskatchewan, there are {con6} confirmed cases, {rec6} recovered cases and {dea6} people lost their life")
+
+    elif "Manitoba" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_ma.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Manitoba, there are {con7} confirmed cases, {rec7} recovered cases and {dea7} people lost their life")
+
+    elif "Yukon" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_yu.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Yukon, there are {con8} confirmed cases, {rec8} recovered cases and {dea8} people lost their life")
+
+    elif "Newfoundland and Labrador" in text or "Newfoundland" in text or "Labrador" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_nl.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Newfoundland and Labrador, there are {con9} confirmed cases, {rec9} recovered cases and {dea9} people lost their life")
+
+    elif "Nova Scotia" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_ns.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Nova Scotia, there are {con10} confirmed cases, {rec10} recovered cases and {dea10} people lost their life")
+
+    elif "New Brunswick" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_nb.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In New Brunswick, there are {con11} confirmed cases, {rec11} recovered cases and {dea11} people lost their life")
+
+    elif "Prince Edward Island" in text or "Prince Edward" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_pei.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Prince Edward Island, there are {con12} confirmed cases, {rec12} recovered cases and {dea12} people lost their life")
+
+    elif "Nunavut" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_nu.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Nunavut, there are {con13} confirmed cases, {rec13} recovered cases and {dea13} people lost their life")
+
+    elif "Northwest territories"  in text or "Northwest" in text:
+        return_to_home.pack_forget()
+        label_bc.pack_forget()
+        label_qu.pack_forget()
+        label_canada.pack_forget()
+        label_on.pack_forget()
+        label_al.pack_forget()
+        label_sas.pack_forget()
+        label_ma.pack_forget()
+        label_yu.pack_forget()
+        label_nl.pack_forget()
+        label_ns.pack_forget()
+        label_nb.pack_forget()
+        label_pei.pack_forget()
+        label_nu.pack_forget()
+        label_nwt.pack_forget()
+        label_nwt.pack()
+        return_to_home.pack()
+        speak(f"{hatr} In Northwest Territories, there are {con14} confirmed cases, {rec14} recovered cases and {dea14} people lost their life")
+
+
+    else:
+        apology_list = ["sorry I didn't catch it?", "Could you please repeat it?", "I am sorry didn't understand", "Please try again"]
+        speak(random.choice(apology_list))
+        
+
+
+clicked = StringVar()
+clicked.set(options[0])
+drop = OptionMenu(wn, clicked, *options, command=option_com)
+
+e = Entry(wn, width=50, font=('Helvetica',20))
+voice = Button(wn, text="Press to Speak", command= record)
+canada = Button(wn, text="Canada", command=show_canada)
+province = Button(wn, text="Provinces", command=show_provinces)
+return_to_home = Button(wn, text="Return To the Home Page", command=return_to_home_page)
+search = Button(wn, text="Search", command=searching)
+sorry_message = Label(wn, text="Sorry System Does NOT has Access to the Location You are Searching", fg="red", font=("Calibri", 15, "bold"))
+
+canada.pack(pady=10)
+province.pack(pady=10)
+
+wn.mainloop()
+
+#Add Other Country Info
+#Add A Graph
+
